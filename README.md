@@ -19,7 +19,6 @@ Comparison and arithmetic operators are available. However, there are no numbers
 # Chaining
 Some operations can be chained.
 - Assign Output (ao) assigns a value to a variable then also output's that value. 
-- Input Assign (ia) takes in a value as input and stores it in the provided variable.
 - Input Output (io) takes in a value and immediately calls output on it.
 
 # Building
