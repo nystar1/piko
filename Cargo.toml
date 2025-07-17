@@ -1,0 +1,9 @@
+[workspace]
+resolver = "3"
+members = [
+    "piko-core",
+    "piko-repl"
+]
+
+[workspace.dependencies]
+piko-core = { path = "piko-core" }
