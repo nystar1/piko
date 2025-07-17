@@ -28,5 +28,8 @@ To build and run the REPL directly, use the following command (you need to have 
 cargo run --release
 ```
 
+# Test
+You can try it out [here](https://nystar1.hackclub.app/piko/). Might not be available forever, though.
+
 # Minimum Supported Rust Version (MSRV)
 This project requires **Rust `1.85.1` or later**.
