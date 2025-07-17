@@ -32,12 +32,13 @@ pub enum Expression {
     Loop(Option<Box<Expression>>, Box<Expression>),
     Break,
     ChainedOp(Vec<ChainOp>),
+    Block(Vec<Expression>),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum ChainOp {
     Input(String),
-    Output(Box<Expression>),
+    Output,
     Assign(String, Box<Expression>),
     Return(Box<Expression>),
     Call(String, Vec<Expression>),
@@ -108,10 +109,8 @@ impl Evaluable for Expression {
                             io::stdin().read_line(&mut input).unwrap();
                             result = input.trim().to_string();
                         }
-                        ChainOp::Output(expr) => {
-                            let value = expr.evaluate()?;
-                            println!("{}", value);
-                            result = value;
+                        ChainOp::Output => {
+                            println!("{}", result);
                         }
                         ChainOp::Assign(_var, expr) => {
                             let value = expr.evaluate()?;
@@ -137,6 +136,13 @@ impl Evaluable for Expression {
                             result = "break".to_string();
                         }
                     }
+                }
+                Ok(result)
+            }
+            Expression::Block(exprs) => {
+                let mut result = String::new();
+                for expr in exprs {
+                    result = expr.evaluate()?;
                 }
                 Ok(result)
             }

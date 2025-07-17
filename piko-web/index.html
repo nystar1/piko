@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Piko Web</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Piko</h1>
+            <nav>
+                <button id="code-tab" class="tab active">Code</button>
+                <button id="examples-tab" class="tab">Examples</button>
+                <button id="help-tab" class="tab">Help</button>
+            </nav>
+        </div>
+        
+        <div id="code-view" class="view active">
+            <div class="editor">
+                <textarea id="code-editor" placeholder="Enter Piko code here..."></textarea>
+                <button id="run-btn">Run</button>
+            </div>
+            <div class="output">
+                <h3>Output</h3>
+                <pre id="output-box"></pre>
+            </div>
+        </div>
+        
+        <div id="examples-view" class="view">
+            <div class="examples-content">
+                <h2>Examples</h2>
+                <div class="examples-list">
+                    <div class="example-item" data-example="hello">
+                        <h3>Hello World</h3>
+                        <div class="example-desc">Basic output</div>
+                    </div>
+                    <div class="example-item" data-example="variables">
+                        <h3>Variables</h3>
+                        <div class="example-desc">Variable assignment and output</div>
+                    </div>
+                    <div class="example-item" data-example="math">
+                        <h3>Math</h3>
+                        <div class="example-desc">Base26 arithmetic operations</div>
+                    </div>
+                    <div class="example-item" data-example="functions">
+                        <h3>Functions</h3>
+                        <div class="example-desc">Function definition and calling</div>
+                    </div>
+                    <div class="example-item" data-example="loops">
+                        <h3>Loops</h3>
+                        <div class="example-desc">Loop constructs</div>
+                    </div>
+                    <div class="example-item" data-example="input">
+                        <h3>Input</h3>
+                        <div class="example-desc">User input</div>
+                    </div>
+                    <div class="example-item" data-example="chains">
+                        <h3>Chains</h3>
+                        <div class="example-desc">Chain operations</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="help-view" class="view">
+            <div class="help-content">
+                <h2>Syntax</h2>
+                <div class="syntax-section">
+                    <h3>Operations</h3>
+                    <div>(o value) - output</div>
+                    <div>(i variable) - input</div>
+                    <div>(a variable value) - assign</div>
+                    <div>(r value) - return</div>
+                </div>
+                <div class="syntax-section">
+                    <h3>Functions</h3>
+                    <div>(f name param1 param2 ... body) - define</div>
+                    <div>(c name arg1 arg2 ...) - call</div>
+                </div>
+                <div class="syntax-section">
+                    <h3>Loops</h3>
+                    <div>(l body) - infinite</div>
+                    <div>(l condition body) - conditional</div>
+                    <div>(b) - break</div>
+                </div>
+                <div class="syntax-section">
+                    <h3>Math</h3>
+                    <div>(+ a b) - add</div>
+                    <div>(- a b) - subtract</div>
+                    <div>(* a b) - multiply</div>
+                    <div>(/ a b) - divide</div>
+                </div>
+                <div class="syntax-section">
+                    <h3>Comparison</h3>
+                    <div>(< a b) - less than</div>
+                    <div>(> a b) - greater than</div>
+                    <div>(<= a b) - less equal</div>
+                    <div>(>= a b) - greater equal</div>
+                    <div>(== a b) - equal</div>
+                    <div>(!= a b) - not equal</div>
+                </div>
+                <div class="syntax-section">
+                    <h3>Chains</h3>
+                    <div>(ao variable value) - assign then output</div>
+                    <div>(ia variable) - input then assign</div>
+                    <div>(io variable) - input then output</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>

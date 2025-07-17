@@ -1,2 +1,2 @@
-(ao x "hello" x)
-(ia name name)
+(ao x "hello")
+(io name)

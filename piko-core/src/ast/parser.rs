@@ -133,15 +133,25 @@ impl Parser {
                         }
                     }
                     "l" => {
-                        if list.len() == 2 {
-                            let body = Self::parse_sexpr(&list[1])?;
-                            Ok(Expression::Loop(None, Box::new(body)))
-                        } else if list.len() == 3 {
-                            let condition = Self::parse_sexpr(&list[1])?;
-                            let body = Self::parse_sexpr(&list[2])?;
-                            Ok(Expression::Loop(Some(Box::new(condition)), Box::new(body)))
+                        if list.len() >= 2 {
+                            if list.len() == 2 {
+                                let body = Self::parse_sexpr(&list[1])?;
+                                Ok(Expression::Loop(None, Box::new(body)))
+                            } else {
+                                let condition = Self::parse_sexpr(&list[1])?;
+                                let mut body_exprs = Vec::new();
+                                for i in 2..list.len() {
+                                    body_exprs.push(Self::parse_sexpr(&list[i])?);
+                                }
+                                let body = if body_exprs.len() == 1 {
+                                    body_exprs.into_iter().next().unwrap()
+                                } else {
+                                    Expression::Block(body_exprs)
+                                };
+                                Ok(Expression::Loop(Some(Box::new(condition)), Box::new(body)))
+                            }
                         } else {
-                            Err(VMError::ParseError("l expects 1 or 2 arguments".to_string()))
+                            Err(VMError::ParseError("l expects at least 1 argument".to_string()))
                         }
                     }
                     "b" => {
@@ -199,13 +209,7 @@ impl Parser {
         for c in chain_str.chars() {
             match c {
                 'o' => {
-                    if arg_index < list.len() {
-                        let expr = Self::parse_sexpr(&list[arg_index])?;
-                        ops.push(ChainOp::Output(Box::new(expr)));
-                        arg_index += 1;
-                    } else {
-                        return Err(VMError::ParseError("Missing argument for o in chain".to_string()));
-                    }
+                    ops.push(ChainOp::Output);
                 }
                 'i' => {
                     if arg_index < list.len() {

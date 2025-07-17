@@ -1,22 +1,30 @@
 use std::collections::HashMap;
-use std::io::{self, Write};
+use std::io::{BufRead, Write};
 use crate::ast::PikoAst;
 use crate::ast::expressions::Expression;
 use crate::error::{VMError, VMResult};
 
 pub mod constants;
 
-pub struct VM {
+pub struct VM<W: Write, R: BufRead> {
     functions: HashMap<String, (Vec<String>, Expression)>,
     variables: HashMap<String, String>,
+    output: W,
+    input: R,
 }
 
-impl VM {
-    pub fn new() -> Self {
+impl<W: Write, R: BufRead> VM<W, R> {
+    pub fn new(output: W, input: R) -> Self {
         VM {
             functions: HashMap::new(),
             variables: HashMap::new(),
+            output,
+            input,
         }
+    }
+    
+    pub fn get_output(&mut self) -> &mut W {
+        &mut self.output
     }
     
     pub fn execute(&mut self, ast: PikoAst) -> VMResult<()> {
@@ -36,9 +44,6 @@ impl VM {
         Ok(())
     }
     
-    pub fn execute_incremental(&mut self, ast: PikoAst) -> VMResult<()> {
-        self.execute(ast)
-    }
     
     fn execute_statement(&mut self, statement: &crate::ast::statements::Statement) -> VMResult<String> {
         match statement {
@@ -61,14 +66,12 @@ impl VM {
             }
             Expression::Output(expr) => {
                 let value = self.evaluate_expression(expr)?;
-                println!("{}", value);
+                writeln!(self.output, "{}", value).map_err(|e| VMError::ExecutionError(e.to_string()))?;
                 Ok(value)
             }
             Expression::Input(var) => {
-                print!("");
-                io::stdout().flush().unwrap();
                 let mut input = String::new();
-                io::stdin().read_line(&mut input).unwrap();
+                self.input.read_line(&mut input).map_err(|e| VMError::ExecutionError(e.to_string()))?;
                 let input = input.trim().to_string();
                 self.variables.insert(var.clone(), input.clone());
                 Ok(input)
@@ -114,17 +117,13 @@ impl VM {
                 for op in ops {
                     match op {
                         crate::ast::expressions::ChainOp::Input(var) => {
-                            print!("");
-                            io::stdout().flush().unwrap();
                             let mut input = String::new();
-                            io::stdin().read_line(&mut input).unwrap();
+                            self.input.read_line(&mut input).map_err(|e| VMError::ExecutionError(e.to_string()))?;
                             result = input.trim().to_string();
                             self.variables.insert(var.clone(), result.clone());
                         }
-                        crate::ast::expressions::ChainOp::Output(expr) => {
-                            let value = self.evaluate_expression(expr)?;
-                            println!("{}", value);
-                            result = value;
+                        crate::ast::expressions::ChainOp::Output => {
+                            writeln!(self.output, "{}", result).map_err(|e| VMError::ExecutionError(e.to_string()))?;
                         }
                         crate::ast::expressions::ChainOp::Assign(var, expr) => {
                             let value = self.evaluate_expression(expr)?;
@@ -165,6 +164,13 @@ impl VM {
                             result = "break".to_string();
                         }
                     }
+                }
+                Ok(result)
+            }
+            Expression::Block(exprs) => {
+                let mut result = String::new();
+                for expr in exprs {
+                    result = self.evaluate_expression(expr)?;
                 }
                 Ok(result)
             }

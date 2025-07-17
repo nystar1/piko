@@ -1,11 +1,15 @@
 
+use std::io::Cursor;
+
 use piko_core::ast::traits::Parseable;
 use piko_core::ast::PikoAst;
 use piko_core::vm::VM;
 
 #[test]
 fn test_basic_functionality() {
-    let mut vm = VM::new();
+    let output = Vec::new();
+    let input = Cursor::new(String::new());
+    let mut vm = VM::new(output, input);
     
     let ast = PikoAst::parse("(o \"hello\")").unwrap();
     assert!(vm.execute(ast).is_ok());
@@ -22,7 +26,9 @@ fn test_basic_functionality() {
 
 #[test]
 fn test_functions() {
-    let mut vm = VM::new();
+    let output = Vec::new();
+    let input = Cursor::new(String::new());
+    let mut vm = VM::new(output, input);
     
     let ast = PikoAst::parse("(f test x (r x))").unwrap();
     assert!(vm.execute(ast).is_ok());
@@ -33,8 +39,10 @@ fn test_functions() {
 
 #[test]
 fn test_chain_operations() {
-    let mut vm = VM::new();
+    let output = Vec::new();
+    let input = Cursor::new(String::new());
+    let mut vm = VM::new(output, input);
     
-    let ast = PikoAst::parse("(ao x \"test\" x)").unwrap();
+    let ast = PikoAst::parse("(ao x \"test\")").unwrap();
     assert!(vm.execute(ast).is_ok());
 }

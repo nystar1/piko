@@ -3,7 +3,7 @@ use piko_core::vm::VM;
 use piko_core::ast::traits::Parseable;
 use std::fs;
 use std::env;
-use std::io::{self, Write};
+use std::io::{self, Write, BufReader};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -27,7 +27,7 @@ fn run_file(filename: &str) -> VMResult<()> {
     let content = fs::read_to_string(filename)
         .map_err(|e| VMError::ExecutionError(format!("Error reading file '{}': {}", filename, e)))?;
     
-    let mut vm = VM::new();
+    let mut vm = VM::new(io::stdout(), BufReader::new(io::stdin()));
     
     for line in content.lines() {
         let line = line.trim();
@@ -36,7 +36,7 @@ fn run_file(filename: &str) -> VMResult<()> {
         }
         
         let ast = PikoAst::parse(line)?;
-        vm.execute_incremental(ast)?;
+        vm.execute(ast)?;
     }
     
     Ok(())
@@ -44,10 +44,11 @@ fn run_file(filename: &str) -> VMResult<()> {
 
 fn run_repl() -> VMResult<()> {
     println!("Welcome to Piko REPL!");
+    println!("By Parth");
     println!("Type 'quit' or 'q' to exit");
     println!("You can also pass a .pyx file: cargo run filename.pyx");
     
-    let mut vm = VM::new();
+    let mut vm = VM::new(io::stdout(), BufReader::new(io::stdin()));
     
     loop {
         print!("piko> ");
@@ -67,7 +68,7 @@ fn run_repl() -> VMResult<()> {
         
         match PikoAst::parse(input) {
             Ok(ast) => {
-                if let Err(e) = vm.execute_incremental(ast) {
+                if let Err(e) = vm.execute(ast) {
                     eprintln!("Error: {}", e);
                 }
             }

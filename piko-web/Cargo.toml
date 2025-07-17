@@ -1,0 +1,12 @@
+[package]
+name = "piko-web"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+piko-core = { path = "../piko-core" }
+wasm-bindgen = { version = "0.2.100", features = ["msrv"] }
+web-sys = { version = "0.3.77", features = ["console"] }
