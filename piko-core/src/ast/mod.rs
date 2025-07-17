@@ -2,7 +2,6 @@ pub mod traits;
 pub mod expressions;
 pub mod statements;
 pub mod parser;
-pub mod chaining;
 
 use serde::{Deserialize, Serialize};
 
