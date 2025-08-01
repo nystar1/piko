@@ -1,30 +1,19 @@
 pub fn add(left: &str, right: &str) -> String {
     let left_num = to_num(left);
     let right_num = to_num(right);
-    match left_num.checked_add(right_num) {
-        Some(result) => from_num(result),
-        None => from_num(u64::MAX),
-    }
+    from_num(left_num.saturating_add(right_num))
 }
 
 pub fn sub(left: &str, right: &str) -> String {
     let left_num = to_num(left);
     let right_num = to_num(right);
-    let result = if left_num > right_num {
-        left_num - right_num
-    } else {
-        1
-    };
-    from_num(result)
+    from_num(left_num.saturating_sub(right_num).max(1))
 }
 
 pub fn mul(left: &str, right: &str) -> String {
     let left_num = to_num(left);
     let right_num = to_num(right);
-    match left_num.checked_mul(right_num) {
-        Some(result) => from_num(result),
-        None => from_num(u64::MAX),
-    }
+    from_num(left_num.saturating_mul(right_num))
 }
 
 pub fn div(left: &str, right: &str) -> String {
@@ -33,53 +22,43 @@ pub fn div(left: &str, right: &str) -> String {
     if right_num == 0 {
         return "a".to_string();
     }
-    let result = left_num / right_num;
-    if result == 0 {
-        "a".to_string()
-    } else {
-        from_num(result)
-    }
+    from_num((left_num / right_num).max(1))
 }
 
-pub fn compare_eq(left: &str, right: &str) -> bool {
-    to_num(left) == to_num(right)
+macro_rules! compare_op {
+    ($name:ident, $op:tt) => {
+        pub fn $name(left: &str, right: &str) -> bool {
+            to_num(left) $op to_num(right)
+        }
+    };
 }
 
-pub fn compare_ne(left: &str, right: &str) -> bool {
-    to_num(left) != to_num(right)
-}
-
-pub fn compare_lt(left: &str, right: &str) -> bool {
-    to_num(left) < to_num(right)
-}
-
-pub fn compare_gt(left: &str, right: &str) -> bool {
-    to_num(left) > to_num(right)
-}
-
-pub fn compare_le(left: &str, right: &str) -> bool {
-    to_num(left) <= to_num(right)
-}
-
-pub fn compare_ge(left: &str, right: &str) -> bool {
-    to_num(left) >= to_num(right)
-}
+compare_op!(compare_eq, ==);
+compare_op!(compare_ne, !=);
+compare_op!(compare_lt, <);
+compare_op!(compare_gt, >);
+compare_op!(compare_le, <=);
+compare_op!(compare_ge, >=);
 
 fn to_num(s: &str) -> u64 {
-    s.chars().fold(0, |acc, c| {
-        acc * 26 + (c as u64 - 'a' as u64 + 1)
-    })
+    s.chars()
+        .map(|c| c as u64 - b'a' as u64 + 1)
+        .fold(0, |acc, digit| acc * 26 + digit)
 }
 
-fn from_num(mut num: u64) -> String {
+fn from_num(num: u64) -> String {
     if num == 0 {
         return "a".to_string();
     }
+    
     let mut result = String::new();
-    while num > 0 {
-        num -= 1;
-        result.push((b'a' + (num % 26) as u8) as char);
-        num /= 26;
+    let mut n = num;
+    
+    while n > 0 {
+        n -= 1;
+        result.push(char::from(b'a' + (n % 26) as u8));
+        n /= 26;
     }
+    
     result.chars().rev().collect()
 }

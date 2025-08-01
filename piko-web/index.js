@@ -7,9 +7,7 @@ async function initWasm() {
         await module.default();
         wasmModule = module;
         vm = new module.PikoVM();
-        console.log('Piko WASM initialized');
     } catch (error) {
-        console.error('Failed to initialize WASM:', error);
         document.getElementById('output-box').textContent = 'Failed to load WASM module';
     }
 }
@@ -40,12 +38,7 @@ function switchTab(tabId) {
     document.getElementById(tabId.replace('-tab', '-view')).classList.add('active');
 }
 
-function loadExample(name) {
-    if (!wasmModule) {
-        console.error('WASM module not loaded');
-        return;
-    }
-    
+function loadExample(name) {    
     const example = wasmModule.get_example(name);
     if (example) {
         document.getElementById('code-editor').value = example;

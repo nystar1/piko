@@ -2,8 +2,8 @@
 resolver = "3"
 members = [
     "piko-core",
-    "piko-repl"
-, "piko-web"]
+    "piko-web"
+]
 
 [workspace.dependencies]
 piko-core = { path = "piko-core" }

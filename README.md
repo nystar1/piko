@@ -22,11 +22,10 @@ Some operations can be chained.
 - Input Output (io) takes in a value and immediately calls output on it.
 
 # Building
-There are two projects in this repository, a REPL tool to test Piko and the library itself. 
-To build and run the REPL directly, use the following command (you need to have Rust installed):
+There are two projects in this repository, a web REPL to test Piko and the library itself. 
 ```
-cargo run --release
+cargo build --workspace
 ```
 
 # Minimum Supported Rust Version (MSRV)
-This project requires **Rust `1.85.1` or later**.
+This project requires **Rust `1.85.1`** or later.

@@ -1,7 +1,7 @@
 
 use std::io::Cursor;
 
-use piko_core::ast::traits::Parseable;
+use piko_core::ast::expressions::Parseable;
 use piko_core::ast::PikoAst;
 use piko_core::vm::VM;
 
