@@ -1,5 +1,5 @@
 use wasm_bindgen::prelude::*;
-use piko_core::ast::traits::Parseable;
+use piko_core::Parseable;
 use piko_core::ast::PikoAst;
 use piko_core::vm::VM;
 

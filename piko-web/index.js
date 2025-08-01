@@ -3,7 +3,7 @@ let wasmModule = null;
 
 async function initWasm() {
     try {
-        const module = await import('./wasm-build/pkg/piko_web.js');
+        const module = await import('./piko_web.js');
         await module.default();
         wasmModule = module;
         vm = new module.PikoVM();
