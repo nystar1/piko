@@ -27,5 +27,8 @@ There are two projects in this repository, a web REPL to test Piko and the libra
 cargo build --workspace
 ```
 
+# Test
+You can try it out [here](https://nystar1.hackclub.app/piko/). Might not be available forever, though.
+
 # Minimum Supported Rust Version (MSRV)
 This project requires **Rust `1.85.1`** or later.
